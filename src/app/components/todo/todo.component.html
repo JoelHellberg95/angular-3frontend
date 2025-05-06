@@ -1,0 +1,45 @@
+<div class="container">
+  <h1>My Todo App</h1>
+
+  <div class="input-group">
+    <input [(ngModel)]="newTitle" placeholder="New todo" />
+    <button (click)="addTodo()">Add</button>
+  </div>
+
+  <!-- Tom-lista -->
+  <div *ngIf="todos.length === 0" class="todo-item empty">
+    <span>🎉 Du har inga todos än!</span>
+  </div>
+
+  <!-- Todo-lista -->
+  <div class="todo-item" *ngFor="let todo of todos">
+    <div class="left">
+      <input
+        type="checkbox"
+        [checked]="todo.completed"
+        (change)="toggleCompleted(todo)"
+      />
+
+      <!-- Visa titel eller input beroende på om vi redigerar -->
+      <span *ngIf="editingTodoId !== todo.id" [class.completed]="todo.completed">
+        {{ todo.title }}
+      </span>
+
+      <input
+        *ngIf="editingTodoId === todo.id"
+        [(ngModel)]="editedTitle"
+        (blur)="saveEdit(todo)"
+        (keyup.enter)="saveEdit(todo)"
+        (keyup.escape)="cancelEdit()"
+        autofocus
+      />
+    </div>
+
+    <!-- Knapp-grupp -->
+    <div class="actions">
+      <button *ngIf="editingTodoId !== todo.id" (click)="startEdit(todo)">✏️</button>
+      <button *ngIf="editingTodoId === todo.id" (click)="saveEdit(todo)">💾</button>
+      <button class="delete" (click)="deleteTodo(todo.id)">×</button>
+    </div>
+  </div>
+</div>
